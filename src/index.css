@@ -1,0 +1,52 @@
+:root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; color: #20293a; background: #f5f7fb; font-synthesis: none; text-rendering: optimizeLegibility; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .6; }
+#root { min-height: 100vh; }
+.app-shell { display: flex; min-height: 100vh; }
+.sidebar { width: 252px; flex: 0 0 252px; display: flex; flex-direction: column; padding: 22px 14px 16px; color: #d8e1f2; background: #14213a; border-right: 1px solid #263855; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 24px; color: #fff; font-size: 20px; font-weight: 750; letter-spacing: -.4px; border-bottom: 1px solid #2a3b59; }
+.brand-mark { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid #8cb5ff; border-radius: 8px; color: #14213a; background: #b9d3ff; font-size: 17px; }
+.sidebar nav { padding-top: 20px; }
+.nav-label { margin: 0 10px 8px; color: #8fa1bf; font-size: 10px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+.admin-label { margin-top: 22px; }
+.sidebar nav a { display: block; margin: 3px 0; padding: 10px 12px; border: 1px solid transparent; border-radius: 8px; color: #c4d0e3; font-size: 14px; font-weight: 550; text-decoration: none; transition: .18s ease; }
+.sidebar nav a:hover { color: #fff; background: #203150; border-color: #344a70; }
+.sidebar nav a.active { color: #fff; background: #2a4777; border-color: #527bb7; box-shadow: inset 3px 0 0 #a9cbff; }
+.sidebar-footer { margin-top: auto; padding: 14px 10px 2px; border-top: 1px solid #2a3b59; color: #8fa1bf; font-size: 11px; }
+.main-col { min-width: 0; flex: 1; }
+.topbar { height: 70px; display: flex; align-items: center; justify-content: flex-end; gap: 18px; padding: 0 32px; background: #fff; border-bottom: 1px solid #dce3ee; }
+.user-summary { display: flex; align-items: center; gap: 9px; color: #526178; font-size: 12px; text-align: left; }
+.user-summary strong, .user-summary small { display: block; }
+.user-summary strong { color: #26354d; font-size: 13px; }
+.user-summary small { text-transform: capitalize; }
+.avatar { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid #c9d8ed; border-radius: 50%; color: #24519a; background: #e9f1ff; font-weight: 750; }
+.logout-button { padding: 8px 13px; border: 1px solid #d5deea; border-radius: 7px; color: #465772; background: #fff; font-size: 13px; font-weight: 650; }
+.logout-button:hover { border-color: #9eb6d8; color: #1d4f98; background: #f6f9ff; }
+.content { max-width: 1440px; padding: 34px; }
+.content > div { animation: appear .2s ease-out; }
+@keyframes appear { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+h1, h2, h3 { color: #1b2940; }
+h2 { margin: 0 0 24px; font-size: 25px; letter-spacing: -.5px; }
+h3 { margin: 0 0 10px; font-size: 17px; }
+p { line-height: 1.5; }
+form { display: grid; max-width: 600px; gap: 8px; padding: 22px; border: 1px solid #d9e1ec; border-radius: 10px; background: #fff; box-shadow: 0 2px 6px rgba(31, 55, 90, .04); }
+label { margin-top: 5px; color: #465772; font-size: 13px; font-weight: 650; }
+input, select { width: 100%; padding: 10px 11px; border: 1px solid #cdd8e7; border-radius: 7px; color: #26354d; background: #fff; outline: none; }
+input:focus, select:focus { border-color: #4d80cc; box-shadow: 0 0 0 3px rgba(77, 128, 204, .14); }
+button { width: fit-content; margin-top: 7px; padding: 9px 14px; border: 1px solid #2d65b5; border-radius: 7px; color: #fff; background: #326fc4; font-size: 13px; font-weight: 700; transition: .18s ease; }
+button:hover:not(:disabled) { border-color: #21569e; background: #245fae; }
+button + button { margin-left: 7px; border-color: #cbd7e7; color: #4a5c76; background: #fff; }
+button + button:hover:not(:disabled) { border-color: #a9bdd8; color: #214e91; background: #f5f8fc; }
+.field-error, .form-error { color: #b4233b; font-size: 12px; }
+.form-error { padding: 10px 12px; border: 1px solid #f3c6ce; border-radius: 7px; background: #fff6f7; }
+.dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; max-width: 860px; }
+.stat-card { display: grid; gap: 5px; padding: 19px; border: 1px solid #d9e1ec; border-radius: 10px; background: #fff; box-shadow: 0 2px 6px rgba(31, 55, 90, .04); }
+.stat-card strong { color: #245fae; font-size: 25px; }.stat-card span { color: #64748b; font-size: 13px; }
+.dashboard-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }.dashboard-links a { padding: 10px 13px; border: 1px solid #c9d8ed; border-radius: 7px; color: #245fae; background: #fff; font-size: 13px; font-weight: 700; text-decoration: none; }.dashboard-links a:hover { border-color: #7fa4d7; background: #f3f7ff; }
+table { width: 100%; margin-top: 20px; border: 1px solid #d9e1ec; border-radius: 9px; border-spacing: 0; background: #fff; overflow: hidden; font-size: 13px; }th, td { padding: 12px 10px; border-bottom: 1px solid #e7ecf3; text-align: left; vertical-align: middle; }th { color: #526178; background: #f7f9fc; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }tbody tr:last-child td { border-bottom: 0; }tbody tr:hover { background: #f9fbfe; }td button { margin: 2px; padding: 6px 9px; font-size: 12px; }td input, td select { padding: 7px; }
+.coupon-form { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 780px; }.coupon-form .field-error { margin-top: -5px; }.redeem-result, .import-status { max-width: 600px; margin-top: 18px; padding: 18px; border: 1px solid #b7dfc6; border-radius: 9px; color: #23633b; background: #f2fbf5; }
+.bulk-import-form { max-width: 560px; }.bulk-import-form input[type="file"] { padding: 8px; background: #f8fafc; }.selected-file { margin: 2px 0 4px; color: #526178; font-size: 12px; }
+@media (max-width: 760px) { .app-shell { display: block; }.sidebar { width: 100%; min-height: 0; padding: 13px 14px; border-right: 0; border-bottom: 1px solid #263855; }.brand { padding: 0 0 12px; }.sidebar nav { display: flex; gap: 5px; padding-top: 10px; overflow-x: auto; }.nav-label, .sidebar-footer { display: none; }.admin-label { display: none; }.sidebar nav a { flex: 0 0 auto; margin: 0; padding: 8px 10px; font-size: 12px; white-space: nowrap; }.topbar { height: 62px; padding: 0 16px; }.content { padding: 22px 16px; }.coupon-form { grid-template-columns: 1fr; } table { display: block; overflow-x: auto; white-space: nowrap; } }
