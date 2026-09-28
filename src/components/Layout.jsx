@@ -1,9 +1,15 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext.js';
 
 export default function Layout() {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const isAdmin = user?.role === 'admin';
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login', { replace: true });
+    };
 
     return (
         <div className="app-shell">
@@ -33,7 +39,7 @@ export default function Layout() {
                         <span className="avatar" aria-hidden="true">{user?.name?.slice(0, 1)?.toUpperCase() || 'U'}</span>
                         <span><strong>{user?.name}</strong><small>{user?.role}</small></span>
                     </div>
-                    <button className="logout-button" onClick={logout}>Logout</button>
+                    <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </header>
 
                 <main className="content">

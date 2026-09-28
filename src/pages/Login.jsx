@@ -31,9 +31,11 @@ export default function Login() {
 
     setSubmitting(true);
     try {
-      await login(form.identifier, form.password);
+      const loggedInUser = await login(form.identifier, form.password);
       toast.success('Logged in');
-      navigate(from, { replace: true });
+      const destination =
+        loggedInUser.role !== 'admin' && from.startsWith('/admin') ? '/' : from;
+      navigate(destination, { replace: true });
     } catch (err) {
       // Backend error shape: { errors: [{ field, message }] }
       const message = err.response?.data?.errors?.[0]?.message || 'Login failed';
