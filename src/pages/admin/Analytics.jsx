@@ -48,16 +48,10 @@ export default function Analytics() {
 
       <div className="dashboard-stats">
         <div className="stat-card"><strong>{data.coupons.total}</strong><span>Total Coupons</span></div>
-        <div className="stat-card"><strong>{data.coupons.active}</strong><span>Active</span></div>
-        <div className="stat-card"><strong>{data.coupons.paused}</strong><span>Paused</span></div>
         <div className="stat-card"><strong>{data.redemptions.total}</strong><span>Total Redemptions</span></div>
         <div className="stat-card"><strong>{data.redemptions.applied}</strong><span>Applied</span></div>
         <div className="stat-card"><strong>{data.redemptions.reverted}</strong><span>Reverted</span></div>
       </div>
-
-      <h3>Coupon Status Breakdown</h3>
-      <Bar label="Active" value={data.coupons.active} max={data.coupons.total} color="#4ade80" />
-      <Bar label="Paused" value={data.coupons.paused} max={data.coupons.total} color="#f87171" />
 
       <h3>Redemption Status Breakdown</h3>
       <Bar label="Applied" value={data.redemptions.applied} max={data.redemptions.total} color="#4ade80" />

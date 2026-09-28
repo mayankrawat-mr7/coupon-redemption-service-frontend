@@ -22,7 +22,6 @@ export default function Dashboard() {
           setStats({
             totalUsers: usersRes.data.data.pagination.totalCount,
             totalCoupons: couponsRes.data.data.length,
-            activeCoupons: couponsRes.data.data.filter((c) => c.status === 'ACTIVE').length,
           });
         } else {
           const res = await api.get('/users/redemptions');
@@ -47,7 +46,6 @@ export default function Dashboard() {
         <div className="dashboard-stats">
           <div className="stat-card"><strong>{stats.totalUsers}</strong><span>Total Users</span></div>
           <div className="stat-card"><strong>{stats.totalCoupons}</strong><span>Coupons (shown)</span></div>
-          <div className="stat-card"><strong>{stats.activeCoupons}</strong><span>Active Coupons</span></div>
         </div>
       )}
 
