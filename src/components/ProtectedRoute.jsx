@@ -2,8 +2,10 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/authContext.js';
 
 export default function ProtectedRoute({ children, allowedRoles }) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
   const location = useLocation();
+
+  if (loading) return <p>Loading session…</p>;
 
   // Not logged in at all → send to login.
   if (!isAuthenticated) {
