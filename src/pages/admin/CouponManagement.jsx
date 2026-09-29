@@ -108,7 +108,7 @@ export default function CouponManagement() {
           <thead>
             <tr>
               <th>Code</th><th>Type</th><th>Value</th><th>Max Uses</th>
-              <th>Per-User Limit</th><th>Used</th><th>Status</th>
+              <th>Per-User Limit</th><th>Used</th>
               <th>Starts</th><th>Expires</th><th>Actions</th>
             </tr>
           </thead>
@@ -121,7 +121,6 @@ export default function CouponManagement() {
                 <td>{c.maxUses}</td>
                 <td>{c.perUserLimit}</td>
                 <td>{c.usedCount}</td>
-                <td>{c.status}</td>
                 <td>{new Date(c.startsAt).toLocaleDateString()}</td>
                 <td>{new Date(c.expiresAt).toLocaleDateString()}</td>
                 <td>
