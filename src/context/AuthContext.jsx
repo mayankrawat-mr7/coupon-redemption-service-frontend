@@ -1,26 +1,28 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import api from '../api/client.js';
 import { AuthContext } from './authContext.js';
 
 export function AuthProvider({ children }) {
-  // Read any saved session on first load, so a page refresh
-  // doesn't log the user out.
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem('user');
-    return stored ? JSON.parse(stored) : null;
-  });
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+
+    api.get('/users/session')
+      .then((res) => { if (active) setUser(res.data.data); })
+      .catch(() => { if (active) setUser(null); })
+      .finally(() => { if (active) setLoading(false); });
+
+    return () => { active = false; };
+  }, []);
 
   const login = useCallback(async (identifier, password) => {
     setLoading(true);
     try {
       // Backend wraps the real payload inside "data"
       const res = await api.post('/users/login', { identifier, password });
-      const { accessToken, refreshToken, user } = res.data.data;
-
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('user', JSON.stringify(user));
+      const { user } = res.data.data;
       setUser(user);
 
       return user;
@@ -29,11 +31,14 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const logout = useCallback(() => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    setUser(null);
+  const logout = useCallback(async () => {
+    try {
+      await api.delete('/users/logout');
+    } catch {
+      // Clear the UI even if the expired access cookie cannot be revoked.
+    } finally {
+      setUser(null);
+    }
   }, []);
 
   const value = { user, login, logout, loading, isAuthenticated: !!user };

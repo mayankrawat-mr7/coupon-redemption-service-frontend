@@ -1,37 +1,53 @@
 import axios from 'axios';
 
-// One shared axios instance for the whole app.
-// baseURL means every call just needs "/users/login", not the full URL.
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:1234/api',
+  withCredentials: true,
 });
 
-// REQUEST interceptor: runs before every request leaves the browser.
-// Attaches the saved access token so protected routes work automatically —
-// you never have to manually add the header in every API call.
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+const refreshUrl = '/users/update-refresh-access';
+let refreshPromise = null;
+
+const refreshAccessToken = () => {
+  if (!refreshPromise) {
+    refreshPromise = api.put(refreshUrl).finally(() => {
+      refreshPromise = null;
+    });
   }
-  return config;
-});
 
-// RESPONSE interceptor: runs after every response comes back.
-// If the backend says 401 (token expired/invalid), we can't trust the
-// session anymore — clear it and send the user back to login.
+  return refreshPromise;
+};
+
+// Retry a failed request once after renewing the HTTP-only access cookie.
+// Concurrent 401 responses share one refresh request instead of racing.
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
+  async (error) => {
+    const originalRequest = error.config;
+    const isRefreshRequest = originalRequest?.url === refreshUrl;
+
+    if (
+      error.response?.status !== 401 ||
+      originalRequest?._retry ||
+      isRefreshRequest
+    ) {
+      if (isRefreshRequest && window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      await refreshAccessToken();
+      return api(originalRequest);
+    } catch (refreshError) {
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
+      return Promise.reject(refreshError);
     }
-    return Promise.reject(error);
   }
 );
 
