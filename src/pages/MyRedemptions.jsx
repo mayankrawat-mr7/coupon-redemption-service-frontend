@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import api from '../api/client.js';
 
+const formatCurrency = (amount) =>
+  typeof amount === 'number' ? `₹${amount.toFixed(2)}` : '—';
+
 export default function MyRedemptions() {
   const [redemptions, setRedemptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +35,7 @@ export default function MyRedemptions() {
       <table>
         <thead>
           <tr>
-            <th>Coupon</th><th>Discount</th><th>Order ID</th><th>Status</th><th>Date</th>
+            <th>Coupon</th><th>Discount</th><th>Order ID</th><th>Order Amount</th><th>Discount Applied</th><th>Amount to Pay</th><th>Date</th>
           </tr>
         </thead>
         <tbody>
@@ -47,7 +50,9 @@ export default function MyRedemptions() {
                   : '—'}
               </td>
               <td>{r.orderId}</td>
-              <td>{r.status}</td>
+              <td>{formatCurrency(r.orderAmount)}</td>
+              <td>{formatCurrency(r.discountAmount)}</td>
+              <td>{formatCurrency(r.finalAmount)}</td>
               <td>{new Date(r.createdAt).toLocaleString()}</td>
             </tr>
           ))}
