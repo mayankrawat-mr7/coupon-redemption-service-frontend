@@ -1,10 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import api from '../../api/client.js';
 
 // A minimal horizontal bar — just an SVG rect scaled by percentage.
 // No library needed for something this simple.
+const asCount = (value) => {
+  const count = Number(value);
+  return Number.isFinite(count) && count > 0 ? count : 0;
+};
+
 function Bar({ label, value, max, color }) {
-  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+  const safeValue = asCount(value);
+  const safeMax = asCount(max);
+  const pct = safeMax > 0
+    ? Math.min(100, (safeValue / safeMax) * 100)
+    : 0;
+  const displayedPct = Number.isInteger(pct) ? pct : Number(pct.toFixed(1));
   return (
     <div className="bar-row">
       <span className="bar-label">{label}</span>
@@ -12,7 +22,7 @@ function Bar({ label, value, max, color }) {
         <rect x="0" y="0" width="100" height="20" fill="var(--accent-bg, #e5e5ea)" />
         <rect x="0" y="0" width={pct} height="20" fill={color} />
       </svg>
-      <span className="bar-value">{value} ({pct}%)</span>
+      <span className="bar-value">{safeValue} / {safeMax} ({displayedPct}%)</span>
     </div>
   );
 }
@@ -22,21 +32,34 @@ export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function fetchAnalytics() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await api.get('/admin/analytics');
-        setData(res.data.data);
-      } catch (err) {
-        setError(err.response?.data?.errors?.[0]?.message || 'Failed to load analytics');
-      } finally {
-        setLoading(false);
-      }
+  const fetchAnalytics = useCallback(async ({ initial = false } = {}) => {
+    if (initial) setLoading(true);
+    setError(null);
+    try {
+      const res = await api.get('/admin/analytics');
+      setData(res.data.data);
+    } catch (err) {
+      setError(err.response?.data?.errors?.[0]?.message || 'Failed to load analytics');
+    } finally {
+      if (initial) setLoading(false);
     }
-    fetchAnalytics();
   }, []);
+
+  useEffect(() => {
+    fetchAnalytics({ initial: true });
+
+    // Keep values current after imports or redemptions made in another tab.
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') fetchAnalytics();
+    };
+    window.addEventListener('focus', refreshWhenVisible);
+    document.addEventListener('visibilitychange', refreshWhenVisible);
+
+    return () => {
+      window.removeEventListener('focus', refreshWhenVisible);
+      document.removeEventListener('visibilitychange', refreshWhenVisible);
+    };
+  }, [fetchAnalytics]);
 
   if (loading) return <p>Loading analytics…</p>;
   if (error) return <p className="form-error">{error}</p>;
